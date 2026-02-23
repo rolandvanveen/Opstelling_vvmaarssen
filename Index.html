@@ -7,7 +7,7 @@
 <style>
   /* --- BASIS OPMAAK & TYPOGRAFIE --- */
   :root {
-    --primary-blue: #0056b3; /* Dieper VV Maarssen blauw */
+    --primary-blue: #0056b3; 
     --accent-green: #28a745;
     --bg-gray: #f4f7f9;
     --text-dark: #333;
@@ -24,75 +24,45 @@
   
   /* --- INVULFORMULIER STYLING --- */
   .setup-container { 
-    background: white; 
-    padding: 20px; 
-    border-radius: 16px; 
-    box-shadow: 0 8px 20px rgba(0,0,0,0.05); 
-    margin-bottom: 20px; 
+    background: white; padding: 20px; border-radius: 16px; 
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05); margin-bottom: 20px; 
   }
   .player-group { 
-    background: white;
-    padding: 10px;
-    border-radius: 12px;
-    margin-bottom: 15px;
-    border: 1px solid #eef2f5;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    background: white; padding: 10px; border-radius: 12px;
+    margin-bottom: 15px; border: 1px solid #eef2f5; box-shadow: 0 2px 5px rgba(0,0,0,0.03);
   }
   .player-row { display: flex; gap: 10px; margin-bottom: 8px; }
   input[type="text"], select { 
-    padding: 12px; 
-    border: 1px solid #dce4ec; 
-    border-radius: 8px; 
-    flex: 1; 
-    font-size: 16px; /* Voorkomt inzoomen op iPhone */
-    background: #fdfdfd;
-    transition: border-color 0.2s;
-    appearance: none; /* Verwijdert standaard styling */
+    padding: 12px; border: 1px solid #dce4ec; border-radius: 8px; 
+    flex: 1; font-size: 16px; background: #fdfdfd;
+    transition: border-color 0.2s; appearance: none; 
   }
   input[type="text"]:focus, select:focus { border-color: var(--primary-blue); outline: none; }
 
   /* Moderne Pinch Hitter Checkbox */
-  .pinch-wrapper {
-    display: flex;
-    align-items: center;
-    margin-top: 5px;
-  }
+  .pinch-wrapper { display: flex; align-items: center; margin-top: 5px; }
   .pinch-checkbox-label {
-    display: flex;
-    align-items: center;
-    background: #f0f2f5;
-    padding: 8px 12px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-    color: #666;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    display: flex; align-items: center; background: #f0f2f5;
+    padding: 8px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;
+    color: #666; cursor: pointer; transition: all 0.3s ease;
   }
-  .pinch-checkbox-label input { display: none; /* Verberg de standaard checkbox */ }
+  .pinch-checkbox-label input { display: none; }
   .pinch-checkbox-label .icon { margin-right: 8px; font-size: 16px; filter: grayscale(100%); transition: filter 0.3s;}
-  /* Stijl als hij aangevinkt is */
-  .pinch-checkbox-label input:checked + span {
-    background: #e6f4ea;
-    color: var(--accent-green);
-  }
+  .pinch-checkbox-label input:checked + span { background: #e6f4ea; color: var(--accent-green); }
   .pinch-checkbox-label input:checked + span .icon { filter: grayscale(0%); }
 
-  
   /* Knoppen */
   .main-btn { 
     width: 100%; padding: 18px; 
     background: linear-gradient(to bottom, var(--primary-blue), #004a99);
     color: white; border: none; border-radius: 12px; 
     font-size: 18px; font-weight: 700; margin-top: 15px; 
-    box-shadow: 0 4px 10px rgba(0, 86, 179, 0.3);
-    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 86, 179, 0.3); cursor: pointer;
   }
   .main-btn:active { transform: translateY(2px); box-shadow: 0 2px 5px rgba(0, 86, 179, 0.3); }
   
   .reset-btn {
-    width: 100%; padding: 15px;
-    background: white; color: var(--primary-blue);
+    width: 100%; padding: 15px; background: white; color: var(--primary-blue);
     border: 2px solid var(--primary-blue); border-radius: 12px;
     font-size: 16px; font-weight: 600; margin-top: 30px; margin-bottom: 30px;
   }
@@ -103,7 +73,7 @@
   .opstelling-wrapper { 
     background: white; padding: 20px 10px; border-radius: 16px; 
     margin-bottom: 40px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); 
-    page-break-inside: avoid; /* Handig bij printen/screenshot */
+    page-break-inside: avoid; 
   }
   .kwart-titel { text-align: center; font-size: 24px; font-weight: 800; margin-bottom: 20px; color: var(--primary-blue); text-transform: uppercase; letter-spacing: 1px;}
   
@@ -114,7 +84,6 @@
 
   .pitch {
     position: relative; width: 100%; max-width: 400px; aspect-ratio: 3 / 4; margin: 0 auto;
-    /* Iets frissere grasmat kleuren */
     background: repeating-linear-gradient(0deg, #38a04c, #38a04c 12.5%, #41b357 12.5%, #41b357 25%);
     border: 4px solid white; box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
     box-sizing: border-box; overflow: hidden; border-radius: 4px;
@@ -148,16 +117,14 @@
   .shirt.keeper { background: var(--primary-blue); border-color: #003f82; }
   .shirt.keeper::after { background: var(--primary-blue); border-color: #003f82; }
   
-  /* Namen beter leesbaar maken met text-shadow */
   .player-name { 
     font-weight: 800; font-size: 12px; margin-top: -32px; color: #222; z-index: 5; position: relative;
-    text-shadow: 1px 1px 0px white, -1px -1px 0px white, 1px -1px 0px white, -1px 1px 0px white; /* Witte rand om zwarte tekst */
+    text-shadow: 1px 1px 0px white, -1px -1px 0px white, 1px -1px 0px white, -1px 1px 0px white; 
     text-transform: uppercase;
   }
   .keeper-name { 
     color: white; margin-top: -32px; position: relative; font-weight: 800; font-size: 12px; z-index: 5;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8); /* Zwarte schaduw om witte tekst */
-    text-transform: uppercase;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8); text-transform: uppercase;
   }
 
   /* Coördinaten op het veld */
@@ -235,7 +202,7 @@
     let aanvalPinch = []; let aanvalNormaal = [];
     let verdedigingPinch = []; let verdedigingNormaal = [];
     
-    // Lees data uit en sorteer op pinch hitters
+    // Lees data uit en bewaar ze als objecten mét hun pinch status
     for(let i=1; i<=9; i++) {
       let naam = document.getElementById(`naam${i}`).value.trim();
       let pos = document.getElementById(`pos${i}`).value;
@@ -243,9 +210,11 @@
 
       if(naam !== '') {
         if(pos === 'aanval') {
-          if (isPinch) aanvalPinch.push(naam); else aanvalNormaal.push(naam);
+          if (isPinch) aanvalPinch.push({naam: naam, pinch: true}); 
+          else aanvalNormaal.push({naam: naam, pinch: false});
         } else {
-          if (isPinch) verdedigingPinch.push(naam); else verdedigingNormaal.push(naam);
+          if (isPinch) verdedigingPinch.push({naam: naam, pinch: true}); 
+          else verdedigingNormaal.push({naam: naam, pinch: false});
         }
       }
     }
@@ -269,11 +238,48 @@
 
     // Genereer 4 kwarten loop
     for(let kwart=1; kwart<=4; kwart++) {
-      let a1 = aanvallers[0]; let a2 = aanvallers[1];
-      let k1 = verdedigers[0]; 
-      let v1 = verdedigers[1]; let v2 = verdedigers[2]; let v3 = verdedigers[3];
+      
+      // 1. Basis en Wissels bepalen o.b.v. huidige volgorde
+      let aanvalBasis = aanvallers.slice(0, 2);
+      let aanvalWissel = aanvallers.slice(2);
 
-      let wissels = [...aanvallers.slice(2), ...verdedigers.slice(4)];
+      let verdedigingBasis = verdedigers.slice(0, 4);
+      let verdedigingWissel = verdedigers.slice(4);
+
+      // 2. MAGISCHE Q4 FIX: Forceer Pinch Hitters het veld in!
+      if (kwart === 4) {
+        // Fix Aanval
+        for (let i = 0; i < aanvalWissel.length; i++) {
+          if (aanvalWissel[i].pinch) {
+            let swapIdx = aanvalBasis.length - 1;
+            while(swapIdx >= 0 && aanvalBasis[swapIdx].pinch) swapIdx--; // Zoek een niet-pinch speler
+            if (swapIdx !== -1) {
+              let temp = aanvalBasis[swapIdx];
+              aanvalBasis[swapIdx] = aanvalWissel[i];
+              aanvalWissel[i] = temp;
+            }
+          }
+        }
+        // Fix Verdediging
+        for (let i = 0; i < verdedigingWissel.length; i++) {
+          if (verdedigingWissel[i].pinch) {
+            let swapIdx = verdedigingBasis.length - 1;
+            while(swapIdx >= 0 && verdedigingBasis[swapIdx].pinch) swapIdx--; // Zoek een niet-pinch speler
+            if (swapIdx !== -1) {
+              let temp = verdedigingBasis[swapIdx];
+              verdedigingBasis[swapIdx] = verdedigingWissel[i];
+              verdedigingWissel[i] = temp;
+            }
+          }
+        }
+      }
+
+      // 3. Toewijzen aan de HTML variabelen
+      let a1 = aanvalBasis[0].naam; let a2 = aanvalBasis[1].naam;
+      let k1 = verdedigingBasis[0].naam; 
+      let v1 = verdedigingBasis[1].naam; let v2 = verdedigingBasis[2].naam; let v3 = verdedigingBasis[3].naam;
+
+      let wissels = [...aanvalWissel.map(p=>p.naam), ...verdedigingWissel.map(p=>p.naam)];
 
       let wisselsHTML = '';
       wissels.forEach((wisselNaam, index) => {
@@ -302,9 +308,9 @@
         </div>
       `;
 
-      // Roulatie logica
-      for(let i=0; i<2; i++) aanvallers.push(aanvallers.shift());
-      for(let i=0; i<4; i++) verdedigers.push(verdedigers.shift());
+      // 4. Roulatie voor het VOLGENDE kwart (Basis sluit aan achter in de rij)
+      aanvallers = [...aanvalWissel, ...aanvalBasis];
+      verdedigers = [...verdedigingWissel, ...verdedigingBasis];
     }
     
     resultHTML += `<button class="reset-btn" onclick="location.reload()">← Terug naar Selectie</button>`;
