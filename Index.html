@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VV Maarssen Opstelling</title>
+<style>
+  body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #eef2f5; padding: 10px; margin: 0; text-transform: uppercase; }
+  h2 { text-align: center; font-size: 20px; }
+  
+  /* Invulformulier styling (Geoptimaliseerd voor iPhone) */
+  .setup-container { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
+  .player-group { background: #f8f9fa; padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #e0e0e0; }
+  .player-row { display: flex; gap: 10px; margin-bottom: 10px; }
+  input[type="text"], select { padding: 10px; border: 1px solid #ccc; border-radius: 5px; flex: 1; font-size: 14px; background: white;}
+  .pinch-checkbox { font-size: 13px; color: #444; display: flex; align-items: center; gap: 8px; font-weight: bold; text-transform: none; }
+  .pinch-checkbox input { width: 18px; height: 18px; margin: 0; }
+  
+  button { width: 100%; padding: 15px; background: #1e5bbd; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; margin-top: 10px; }
+  .error { color: red; text-align: center; font-weight: bold; margin-top: 10px; display: none; }
+
+  /* Veld styling */
+  .opstelling-wrapper { background: white; padding: 15px 10px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+  .kwart-titel { text-align: center; font-size: 22px; font-weight: bold; margin-bottom: 15px; }
+  
+  .subs-header { display: flex; justify-content: space-around; margin-bottom: 15px; text-align: center; font-size: 12px; }
+  .sub-item span { font-weight: normal; color: #555; text-transform: lowercase; }
+  .sub-item strong { display: block; font-size: 14px; margin-top: 2px; }
+
+  .pitch {
+    position: relative; width: 100%; max-width: 400px; aspect-ratio: 3 / 4; margin: 0 auto;
+    background: repeating-linear-gradient(0deg, #2a8138, #2a8138 12.5%, #329344 12.5%, #329344 25%);
+    border: 3px solid white; box-sizing: border-box; overflow: hidden;
+  }
+  
+  /* Veldlijnen */
+  .line-center { position: absolute; top: 50%; left: 0; width: 100%; height: 3px; background: white; }
+  .circle-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; border: 3px solid white; border-radius: 50%; }
+  .box-top { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 140px; height: 50px; border: 3px solid white; border-top: none; }
+  .box-bottom { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 140px; height: 50px; border: 3px solid white; border-bottom: none; }
+  
+  /* Logo in het midden */
+  .logo {
+    position: absolute; top: 25%; left: 50%; transform: translate(-50%, -50%);
+    width: 80px; height: 80px; background: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: 4px solid #111; font-weight: bold; font-size: 10px; color: black; box-shadow: 0 0 15px rgba(255,255,255,0.8); z-index: 1;
+  }
+
+  /* Spelers (Shirtjes) */
+  .player { position: absolute; transform: translate(-50%, -50%); text-align: center; z-index: 2; }
+  .shirt {
+    width: 45px; height: 40px; background: white; border: 2px solid #222; border-radius: 5px 5px 0 0;
+    margin: 0 auto; position: relative; box-shadow: 0 0 10px rgba(255,255,255,0.6);
+  }
+  .shirt::after {
+    content: ''; position: absolute; top: 4px; left: -12px; width: 65px; height: 16px;
+    background: white; border: 2px solid #222; z-index: -1; border-radius: 4px;
+  }
+  .shirt.keeper { background: #1e5bbd; }
+  .shirt.keeper::after { background: #1e5bbd; }
+  
+  .player-name { font-weight: bold; font-size: 11px; margin-top: -30px; color: #111; z-index: 5; position: relative;}
+  .keeper-name { color: white; margin-top: -30px; position: relative; font-weight: bold; font-size: 11px; z-index: 5;}
+
+  /* Coördinaten op het veld */
+  .pos-a1 { top: 48%; left: 35%; }
+  .pos-a2 { top: 48%; left: 65%; }
+  .pos-v1 { bottom: 28%; left: 20%; }
+  .pos-v2 { bottom: 28%; left: 50%; }
+  .pos-v3 { bottom: 28%; left: 80%; }
+  .pos-k  { bottom: 8%; left: 50%; }
+
+</style>
+</head>
+<body>
+
+<div class="setup-container" id="inputSection">
+  <h2>Vul de selectie in</h2>
+  <div id="inputs"></div>
+  <div id="errorMsg" class="error">Vul minimaal 2 aanvallers en 4 verdedigers/keepers in!</div>
+  <button onclick="genereerOpstelling()">Genereer Opstellingen</button>
+</div>
+
+<div id="result"></div>
+
+<script>
+  // Genereer de 9 invoervelden in blokjes
+  const inputsDiv = document.getElementById('inputs');
+  for(let i=1; i<=9; i++) {
+    inputsDiv.innerHTML += `
+      <div class="player-group">
+        <div class="player-row">
+          <input type="text" id="naam${i}" placeholder="Speler ${i}">
+          <select id="pos${i}">
+            <option value="verdediging">Verdediger/Keeper</option>
+            <option value="aanval">Aanvaller</option>
+          </select>
+        </div>
+        <label class="pinch-checkbox">
+          <input type="checkbox" id="pinch${i}"> 💪 Pinch hitter (vlamt in 4e kwart)
+        </label>
+      </div>
+    `;
+  }
+
+  function genereerOpstelling() {
+    // Aparte bakjes maken om de pinch hitters vooraan te kunnen plaatsen
+    let aanvalPinch = [];
+    let aanvalNormaal = [];
+    let verdedigingPinch = [];
+    let verdedigingNormaal = [];
+    
+    // Lees namen uit
+    for(let i=1; i<=9; i++) {
+      let naam = document.getElementById(`naam${i}`).value.trim();
+      let pos = document.getElementById(`pos${i}`).value;
+      let isPinch = document.getElementById(`pinch${i}`).checked;
+
+      if(naam !== '') {
+        if(pos === 'aanval') {
+          if (isPinch) aanvalPinch.push(naam); else aanvalNormaal.push(naam);
+        } else {
+          if (isPinch) verdedigingPinch.push(naam); else verdedigingNormaal.push(naam);
+        }
+      }
+    }
+
+    // Combineer de lijsten: Pinch hitters staan nu als eerste in de rij!
+    let aanvallers = [...aanvalPinch, ...aanvalNormaal];
+    let verdedigers = [...verdedigingPinch, ...verdedigingNormaal];
+
+    // Check of we genoeg spelers hebben
+    if(aanvallers.length < 2 || verdedigers.length < 4) {
+      document.getElementById('errorMsg').style.display = 'block';
+      return;
+    }
+    document.getElementById('errorMsg').style.display = 'none';
+
+    // Verberg het invulformulier
+    document.getElementById('inputSection').style.display = 'none';
+
+    let resultHTML = '';
+    const wisselLabels = ["eerste wissel", "tweede wissel", "derde wissel"];
+
+    // Genereer 4 kwarten
+    for(let kwart=1; kwart<=4; kwart++) {
+      
+      let a1 = aanvallers[0]; let a2 = aanvallers[1];
+      let k1 = verdedigers[0]; 
+      let v1 = verdedigers[1]; let v2 = verdedigers[2]; let v3 = verdedigers[3];
+
+      let wisselAanvallers = aanvallers.slice(2);
+      let wisselVerdedigers = verdedigers.slice(4);
+      let wissels = [...wisselAanvallers, ...wisselVerdedigers];
+
+      // Maak de HTML voor de wissels
+      let wisselsHTML = '';
+      wissels.forEach((wisselNaam, index) => {
+        wisselsHTML += `<div class="sub-item"><span>${wisselLabels[index] || 'wissel'}</span><strong>${wisselNaam}</strong></div>`;
+      });
+
+      resultHTML += `
+        <div class="opstelling-wrapper">
+          <div class="kwart-titel">Opstelling ${kwart}</div>
+          <div class="subs-header">${wisselsHTML}</div>
+          
+          <div class="pitch">
+            <div class="box-top"></div>
+            <div class="box-bottom"></div>
+            <div class="line-center"></div>
+            <div class="circle-center"></div>
+            <div class="logo">VV<br>MAARSSEN</div>
+
+            <div class="player pos-a1"><div class="shirt"></div><div class="player-name">${a1}</div></div>
+            <div class="player pos-a2"><div class="shirt"></div><div class="player-name">${a2}</div></div>
+            
+            <div class="player pos-v1"><div class="shirt"></div><div class="player-name">${v1}</div></div>
+            <div class="player pos-v2"><div class="shirt"></div><div class="player-name">${v2}</div></div>
+            <div class="player pos-v3"><div class="shirt"></div><div class="player-name">${v3}</div></div>
+            
+            <div class="player pos-k"><div class="shirt keeper"></div><div class="keeper-name">${k1}</div></div>
+          </div>
+        </div>
+      `;
+
+      // Roulatie: Spelers sluiten achteraan de rij aan
+      for(let i=0; i<2; i++) aanvallers.push(aanvallers.shift());
+      for(let i=0; i<4; i++) verdedigers.push(verdedigers.shift());
+    }
+    
+    // Voeg een 'Nieuwe Opstelling' knop toe om de pagina te verversen
+    resultHTML += `<button onclick="location.reload()" style="background:#555;">Nieuwe Opstelling Maken</button>`;
+    
+    document.getElementById('result').innerHTML = resultHTML;
+  }
+</script>
+
+</body>
+</html>
