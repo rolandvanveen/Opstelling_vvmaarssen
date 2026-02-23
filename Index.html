@@ -202,7 +202,7 @@
     let aanvalPinch = []; let aanvalNormaal = [];
     let verdedigingPinch = []; let verdedigingNormaal = [];
     
-    // Lees data uit en bewaar ze als objecten mét hun pinch status
+    // Lees data uit en bewaar ze als objecten (INCLUSIEF keep-teller voor verdedigers!)
     for(let i=1; i<=9; i++) {
       let naam = document.getElementById(`naam${i}`).value.trim();
       let pos = document.getElementById(`pos${i}`).value;
@@ -213,8 +213,9 @@
           if (isPinch) aanvalPinch.push({naam: naam, pinch: true}); 
           else aanvalNormaal.push({naam: naam, pinch: false});
         } else {
-          if (isPinch) verdedigingPinch.push({naam: naam, pinch: true}); 
-          else verdedigingNormaal.push({naam: naam, pinch: false});
+          // Voeg een teller toe: 'keepCount' om bij te houden wie hoe vaak heeft gekeept
+          if (isPinch) verdedigingPinch.push({naam: naam, pinch: true, keepCount: 0}); 
+          else verdedigingNormaal.push({naam: naam, pinch: false, keepCount: 0});
         }
       }
     }
@@ -239,7 +240,7 @@
     // Genereer 4 kwarten loop
     for(let kwart=1; kwart<=4; kwart++) {
       
-      // 1. Basis en Wissels bepalen o.b.v. huidige volgorde
+      // 1. Basis en Wissels bepalen
       let aanvalBasis = aanvallers.slice(0, 2);
       let aanvalWissel = aanvallers.slice(2);
 
@@ -248,11 +249,10 @@
 
       // 2. MAGISCHE Q4 FIX: Forceer Pinch Hitters het veld in!
       if (kwart === 4) {
-        // Fix Aanval
         for (let i = 0; i < aanvalWissel.length; i++) {
           if (aanvalWissel[i].pinch) {
             let swapIdx = aanvalBasis.length - 1;
-            while(swapIdx >= 0 && aanvalBasis[swapIdx].pinch) swapIdx--; // Zoek een niet-pinch speler
+            while(swapIdx >= 0 && aanvalBasis[swapIdx].pinch) swapIdx--; 
             if (swapIdx !== -1) {
               let temp = aanvalBasis[swapIdx];
               aanvalBasis[swapIdx] = aanvalWissel[i];
@@ -260,11 +260,10 @@
             }
           }
         }
-        // Fix Verdediging
         for (let i = 0; i < verdedigingWissel.length; i++) {
           if (verdedigingWissel[i].pinch) {
             let swapIdx = verdedigingBasis.length - 1;
-            while(swapIdx >= 0 && verdedigingBasis[swapIdx].pinch) swapIdx--; // Zoek een niet-pinch speler
+            while(swapIdx >= 0 && verdedigingBasis[swapIdx].pinch) swapIdx--; 
             if (swapIdx !== -1) {
               let temp = verdedigingBasis[swapIdx];
               verdedigingBasis[swapIdx] = verdedigingWissel[i];
@@ -274,10 +273,28 @@
         }
       }
 
-      // 3. Toewijzen aan de HTML variabelen
+      // 3. EERLIJKE KEEPER KIEZEN
+      // Zoek binnen de 4 verdedigers in het veld naar de speler met de minste keepers-beurten
+      let keeperIndex = 0;
+      let minKeeps = verdedigingBasis[0].keepCount;
+      for (let i = 1; i < verdedigingBasis.length; i++) {
+        if (verdedigingBasis[i].keepCount < minKeeps) {
+          minKeeps = verdedigingBasis[i].keepCount;
+          keeperIndex = i;
+        }
+      }
+      
+      // Wijs de keeper aan en tel 1 op bij zijn score
+      let keeperSpeler = verdedigingBasis[keeperIndex];
+      keeperSpeler.keepCount += 1;
+      
+      // De overige 3 spelers zijn veldverdedigers
+      let veldVerdedigers = verdedigingBasis.filter((speler, idx) => idx !== keeperIndex);
+
+      // 4. Toewijzen aan de HTML variabelen
       let a1 = aanvalBasis[0].naam; let a2 = aanvalBasis[1].naam;
-      let k1 = verdedigingBasis[0].naam; 
-      let v1 = verdedigingBasis[1].naam; let v2 = verdedigingBasis[2].naam; let v3 = verdedigingBasis[3].naam;
+      let k1 = keeperSpeler.naam; 
+      let v1 = veldVerdedigers[0].naam; let v2 = veldVerdedigers[1].naam; let v3 = veldVerdedigers[2].naam;
 
       let wissels = [...aanvalWissel.map(p=>p.naam), ...verdedigingWissel.map(p=>p.naam)];
 
@@ -308,7 +325,7 @@
         </div>
       `;
 
-      // 4. Roulatie voor het VOLGENDE kwart (Basis sluit aan achter in de rij)
+      // 5. Roulatie voor het VOLGENDE kwart (Basis sluit aan achter in de rij)
       aanvallers = [...aanvalWissel, ...aanvalBasis];
       verdedigers = [...verdedigingWissel, ...verdedigingBasis];
     }
